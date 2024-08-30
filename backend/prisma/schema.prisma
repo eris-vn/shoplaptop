@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id                 Int           @id @default(autoincrement())
+  name               String
+  email              String        @unique
+  password           String
+  role               Int           @default(0)
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
+  default_address_id Int?
+  reviews            reviews[]
+  orders             orders[]
+  default_address    user_address? @relation(fields: [default_address_id], references: [id])
+}
+
+model brands {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(255)
+  products products[]
+}
+
+model products {
+  id                 Int                  @id @default(autoincrement())
+  brand_id           Int?
+  category_id        Int?
+  slug               String               @unique @db.VarChar(255)
+  name               String               @db.VarChar(255)
+  short_description  String?              @db.Text
+  thumbnail          String?              @db.VarChar(255)
+  description        String               @db.Text
+  price              Int
+  discount           Int                  @default(0)
+  status             Int
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  brand              brands?              @relation(fields: [brand_id], references: [id])
+  category           categories?          @relation(fields: [category_id], references: [id])
+  images             product_images[]
+  reviews            reviews[]
+  order_details      order_details[]
+  product_attributes product_attributes[]
+
+  // Các trường SEO
+  meta_title       String? @db.VarChar(255)
+  meta_description String? @db.Text
+  meta_keywords    String? @db.Text
+}
+
+model product_images {
+  id         Int      @id @default(autoincrement())
+  product    products @relation(fields: [product_id], references: [id])
+  product_id Int
+  image_url  String
+}
+
+model categories {
+  id                  Int                   @id @default(autoincrement())
+  name                String                @db.VarChar(255)
+  slug                String                @db.VarChar(255)
+  image_url           String
+  products            products[]
+  category_attributes category_attributes[]
+}
+
+model reviews {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  user_id    Int
+  rating     Int
+  images     Json?
+  comment    String   @db.Text
+  user       users    @relation(fields: [user_id], references: [id])
+  product    products @relation(fields: [product_id], references: [id])
+}
+
+model user_address {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  name         String   @db.Text
+  address      String   @db.Text
+  phone_number String   @db.VarChar(20)
+  status       Int      @default(0)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  orders       orders[]
+  users        users[]
+}
+
+model orders {
+  id             Int             @id @default(autoincrement())
+  user_id        Int
+  address_id     Int
+  payment_method String
+  note           String          @db.Text
+  status         Int
+  total_price    Int             @default(0)
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  user           users           @relation(fields: [user_id], references: [id])
+  address        user_address    @relation(fields: [address_id], references: [id])
+  order_details  order_details[]
+}
+
+model order_details {
+  id         Int      @id @default(autoincrement())
+  order_id   Int
+  product_id Int
+  price      Int
+  discount   Int      @default(0)
+  quantity   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  order      orders   @relation(fields: [order_id], references: [id])
+  product    products @relation(fields: [product_id], references: [id])
+}
+
+model attributes {
+  id                  Int                   @id @default(autoincrement())
+  name                String                @db.VarChar(255) // Tên của thuộc tính (ví dụ: Kích thước, Màu sắc)
+  value               String                @unique @db.VarChar(255)
+  values              attribute_values[] // Liên kết với các giá trị thuộc tính
+  created_at          DateTime              @default(now())
+  updated_at          DateTime              @default(now()) @updatedAt
+  category_attributes category_attributes[]
+}
+
+model attribute_values {
+  id           Int                  @id @default(autoincrement())
+  attribute_id Int
+  name         String               @db.VarChar(255) // Giá trị của thuộc tính (ví dụ: Đỏ, Lớn, Nhỏ, ...)
+  value        String               @unique @db.VarChar(255)
+  attribute    attributes           @relation(fields: [attribute_id], references: [id])
+  products     product_attributes[]
+  created_at   DateTime             @default(now())
+  updated_at   DateTime             @default(now()) @updatedAt
+}
+
+model product_attributes {
+  id                 Int              @id @default(autoincrement())
+  product_id         Int
+  attribute_value_id Int
+  product            products         @relation(fields: [product_id], references: [id])
+  attribute_value    attribute_values @relation(fields: [attribute_value_id], references: [id])
+}
+
+model category_attributes {
+  category_id  Int
+  attribute_id Int
+  category     categories @relation(fields: [category_id], references: [id])
+  attribute    attributes @relation(fields: [attribute_id], references: [id])
+
+  @@id([category_id, attribute_id]) // Tạo khóa chính kép để đảm bảo không có bản ghi trùng lặp
+}

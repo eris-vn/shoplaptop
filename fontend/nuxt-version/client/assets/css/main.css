@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+    font-family: "Signika Negative", sans-serif;
+    height: 100%;
+}
+
+body {
+    background-color: #ececec;
+    height: 100%;
+}
+
+:root {
+    --p-primary-50: var(--p-red-50);
+    --p-primary-100: var(--p-red-100);
+    --p-primary-200: var(--p-red-200);
+    --p-primary-300: var(--p-red-300);
+    --p-primary-400: var(--p-red-400);
+    --p-primary-500: var(--p-red-500);
+    --p-primary-600: var(--p-red-600);
+    --p-primary-700: var(--p-red-700);
+    --p-primary-800: var(--p-red-800);
+    --p-primary-900: var(--p-red-900);
+    --p-primary-950: var(--p-red-950);
+}

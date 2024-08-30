@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap');
+
+* {
+  font-family: "Signika Negative", sans-serif;
+}
+
+body {
+  background-color: #ececec;
+  height: 100%;
+}
+
+.p-divider.p-divider-horizontal:before {
+  border-top: 1px #e5e7eb !important;
+}
+
+.p-divider-solid.p-divider-horizontal:before {
+  border-top-style: solid !important;
+}
+
+.p-stepper-nav {
+  padding: 0px 13px;
+}
