@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Stepper } from "primereact/stepper";
-import { Button } from "primereact/button";
 import { StepperPanel } from "primereact/stepperpanel";
 import { useSession } from "next-auth/react";
-import { AppDispatch, RootState } from "../lib/redux/store";
+import { AppDispatch, RootState } from "@/app/lib/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateCartQuantity,
@@ -106,7 +105,7 @@ export default function GioHang() {
 
   useEffect(() => {
     const newTotal = cart.cart.reduce(
-      (acc, product) => acc + (product.price as any) * product.quantity,
+      (acc, product) => acc + (product.price as number) * product.quantity,
       0
     );
     setTotal(newTotal);
@@ -128,11 +127,11 @@ export default function GioHang() {
                     ""
                   )}
                   {cart.cart.length ? (
-                    cart.cart.map((product: any) => {
+                    cart.cart.map((product: any, index) => {
                       return (
                         <div
                           className="grid grid-cols-12 border-t pt-4 mt-4"
-                          key={product}
+                          key={index}
                         >
                           <div className="col-span-8 flex gap-3">
                             <img

@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { Signika_Negative } from "next/font/google";
-import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import "primereact/resources/themes/lara-light-blue/theme.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "./auth";
 import Providers from "./lib/redux/provider";
+import { PrimeReactProvider } from "primereact/api";
+
+// css
+import "./globals.css";
+import "primereact/resources/themes/lara-light-blue/theme.css";
 
 const signika_negative = Signika_Negative({ subsets: ["latin"] });
 
@@ -22,26 +25,38 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap"
-          rel="stylesheet"
-        ></link>
-      </head>
-      <body className={signika_negative.className}>
-        <SessionProvider session={session}>
-          <Header></Header>
-          <Providers>{children}</Providers>
-          <Footer></Footer>
-        </SessionProvider>
-      </body>
-    </html>
+    <PrimeReactProvider>
+      <html lang="en">
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              const style = document.createElement('style')
+              style.innerHTML = '@layer tailwind-base, primereact, tailwind-utilities;'
+              style.setAttribute('type', 'text/css')
+              document.querySelector('head').prepend(style)
+            `,
+            }}
+          />
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap"
+            rel="stylesheet"
+          ></link>
+        </head>
+        <body className={signika_negative.className}>
+          <SessionProvider session={session}>
+            <Header></Header>
+            <Providers>{children}</Providers>
+            <Footer></Footer>
+          </SessionProvider>
+        </body>
+      </html>
+    </PrimeReactProvider>
   );
 }

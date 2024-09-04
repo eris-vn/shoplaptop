@@ -2,7 +2,9 @@ import Link from "next/link";
 import BuyButton from "./buy";
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const data = await fetch(`${process.env.BASE_API}/api/product/info`, {
+  const baseURL = process.env.NEXT_PUBLIC_BASE_API ?? "";
+
+  const data = await fetch(`${baseURL}/api/product/info`, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -14,18 +16,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
   });
   const { status, data: product } = await data.json();
 
-  const requestRelatedProduct = await fetch(
-    `${process.env.BASE_API}/api/product/related`,
-    {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        slug: params.slug,
-      }),
-    }
-  );
+  const requestRelatedProduct = await fetch(`${baseURL}/api/product/related`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      slug: params.slug,
+    }),
+  });
 
   const { data: relatedProduct } = await requestRelatedProduct.json();
 
@@ -90,7 +89,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 -5%
               </span>
             </div>
-            <BuyButton slug={product.slug}></BuyButton>
+            <BuyButton baseURL={baseURL} slug={product.slug}></BuyButton>
 
             {product.short_description ? (
               <div

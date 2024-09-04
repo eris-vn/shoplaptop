@@ -2,8 +2,8 @@ import NextAuth, { AuthError } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 // import useFetch from "@/app/hooks/useFetch";
-import { ApiResponse } from "@/app/types/api";
-import { User } from "@/app/types/user";
+import { ApiResponse } from "@/types/api";
+import { User } from "@/types/user";
 
 class customError extends AuthError {
   constructor(message: string) {
@@ -65,7 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.token = user.token;
+        token.token = (user as any).token;
       }
 
       return token;

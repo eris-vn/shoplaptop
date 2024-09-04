@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "@/app/lib/redux/slices/cart";
 import { AppDispatch } from "@/app/lib/redux/store";
 
-export default function BuyButton(props: any) {
+export default function BuyButton(props: { slug: string; baseURL: string }) {
   const dispatch = useDispatch<AppDispatch>();
 
   const addProductToCart = async (slug: string, quantity: number = 1) => {
-    const response = await fetch("http://localhost:4000/api/product/info", {
+    const response = await fetch(`${props.baseURL}/api/product/info`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

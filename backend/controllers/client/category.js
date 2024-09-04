@@ -27,9 +27,9 @@ const categoryController = {
       // xử lý sắp xếp
       const orderBy = {};
 
-      if (priceSort === "a-b") {
+      if (priceSort === "asc") {
         orderBy.price = "asc";
-      } else if (priceSort === "b-a") {
+      } else if (priceSort === "desc") {
         orderBy.price = "desc";
       }
 

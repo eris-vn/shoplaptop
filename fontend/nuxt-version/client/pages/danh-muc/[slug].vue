@@ -19,8 +19,8 @@
           v-model="query.price"
           optionValue="code"
           :options="[
-            { name: 'Giá: thấp đến cao', code: 'a-b' },
-            { name: 'Giá: cao đến thấp', code: 'b-a' },
+            { name: 'Giá: thấp đến cao', code: 'asc' },
+            { name: 'Giá: cao đến thấp', code: 'desc' },
           ]"
           optionLabel="name"
           placeholder="Sắp xếp theo giá"
